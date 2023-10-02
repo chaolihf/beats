@@ -20,6 +20,7 @@ package main
 import (
 	"os"
 
+	node_expoter_main "github.com/chaolihf/node_exporter"
 	"github.com/elastic/beats/v7/filebeat/cmd"
 	inputs "github.com/elastic/beats/v7/filebeat/input/default-inputs"
 )
@@ -33,6 +34,7 @@ import (
 // Finally, input uses the registrar information, on restart, to
 // determine where in each file to restart a harvester.
 func main() {
+	go node_expoter_main.Main()
 	if err := cmd.Filebeat(inputs.Init, cmd.FilebeatSettings()).Execute(); err != nil {
 		os.Exit(1)
 	}
