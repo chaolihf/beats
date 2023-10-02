@@ -264,7 +264,7 @@ require (
 	github.com/beevik/ntp v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
-	github.com/chaolihf/node_exporter v1.6.2 // indirect
+	github.com/chaolihf/node_exporter v1.6.3 // indirect
 	github.com/chaolihf/udpgo v0.0.13 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
