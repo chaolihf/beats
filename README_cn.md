@@ -17,11 +17,20 @@ go get github.com/elastic/beats/v7/libbeat/publisher/queue/diskqueue
 config.json文件格式
 ```
 {
-    "module":["filebeat","node_exporter"]
+    "module":["filebeat","node_exporter"],
+    "command":[
+        {
+            "name":"web.config.file",
+            "type":"string",
+            "value":"",
+            "description":"[EXPERIMENTAL] Path to configuration file that can enable TLS or authentication. See: https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md"
+        }
+    ]
 }
 ```
 
 module中可以激活0个或3个模块
+type可以为string,boolean值
 
 # 编译和运行
 cd beats/oneagent

@@ -19,5 +19,37 @@
         "counterOffset":100,
         "localLog":true
     },
-    "module":["filebeat","node_exporter"]
+    "module":["filebeat","node_exporter"],
+    "command":[
+        {
+            "name":"web.config.file",
+            "type":"string",
+            "value":"",
+            "description":"[EXPERIMENTAL] Path to configuration file that can enable TLS or authentication. See: https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md"
+        },
+        {
+            "name":"web.listen-address",
+            "type":"string",
+            "value":":9150",
+            "description":"Addresses on which to expose metrics and web interface. Repeatable for multiple addresses."
+        },
+        {
+            "name":"collector.softirqs",
+            "type":"boolean",
+            "value":"",
+            "description":""
+        },
+        {
+            "name":"collector.systemd",
+            "type":"boolean",
+            "value":"",
+            "description":""
+        },
+        {
+            "name":"collector.systemd.unit-include",
+            "type":"string",
+            "value":"",
+            "description":""
+        }
+    ]
 }
