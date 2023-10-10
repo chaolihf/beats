@@ -7,14 +7,17 @@ import (
 
 	node_exporter_main "github.com/chaolihf/node_exporter"
 	jjson "github.com/chaolihf/udpgo/json"
+	"github.com/containerd/cgroups/v3/cgroup1"
 	fileBeatCmd "github.com/elastic/beats/v7/filebeat/cmd"
 	inputs "github.com/elastic/beats/v7/filebeat/input/default-inputs"
+	"github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/spf13/pflag"
 )
 
 const (
-	Module_File = "filebeat"
-	Module_Node = "node_exporter"
+	Module_File          = "filebeat"
+	Module_Node          = "node_exporter"
+	Module_LimitResource = "limit"
 )
 
 /*
@@ -28,11 +31,23 @@ type CommandInfo struct {
 }
 
 /*
+限制资源信息
+*/
+type LimitResourceInfo struct {
+	shares uint64
+	period uint64
+	quota  int64
+	memory int64
+	swap   int64
+}
+
+/*
 根据配置文件激活不同的模块，获取命令行信息
 */
-func activeInfos() (map[string]bool, []CommandInfo) {
+func activeInfos() (map[string]bool, []CommandInfo, LimitResourceInfo) {
 	var oneAgentModules = make(map[string]bool)
 	var commandInfos []CommandInfo
+	var resourceInfo LimitResourceInfo
 	oneAgentModules[Module_File] = false
 	oneAgentModules[Module_Node] = false
 	filePath := "config.json"
@@ -57,12 +72,20 @@ func activeInfos() (map[string]bool, []CommandInfo) {
 					description: jsonCommandInfo.GetString("description"),
 				})
 			}
+			jsonLimitResourceInfo := jsonConfigInfos.GetJsonObject("limit")
+			resourceInfo = LimitResourceInfo{
+				shares: uint64(jsonLimitResourceInfo.GetInt("shares")),
+				period: uint64(jsonLimitResourceInfo.GetInt("period")),
+				quota:  int64(jsonLimitResourceInfo.GetInt("quota")),
+				memory: int64(jsonLimitResourceInfo.GetInt("memory")),
+				swap:   int64(jsonLimitResourceInfo.GetInt("swap")),
+			}
 		}
 	}
 	for moduleName := range oneAgentModules {
 		fmt.Printf("激活模块%s\n", moduleName)
 	}
-	return oneAgentModules, commandInfos
+	return oneAgentModules, commandInfos, resourceInfo
 }
 
 /*
@@ -75,7 +98,10 @@ func main() {
 		}
 	}()
 	done := make([]chan string, 1)
-	oneAgentModules, oneAgentCommandLines := activeInfos()
+	oneAgentModules, oneAgentCommandLines, oneAgentResource := activeInfos()
+	if oneAgentModules[Module_LimitResource] {
+		limitResource(oneAgentResource)
+	}
 	if oneAgentModules[Module_File] {
 		go runFileBeat(oneAgentModules, done[0], oneAgentCommandLines)
 	}
@@ -85,6 +111,33 @@ func main() {
 		for _, moduleDone := range done {
 			v := <-moduleDone
 			fmt.Println("run finish ", v)
+		}
+	}
+}
+
+/*
+use cgroup to limit process resource,such as cpu,memory
+*/
+func limitResource(oneAgentResource LimitResourceInfo) {
+	control, err := cgroup1.New(cgroup1.StaticPath("/oneagent"), &specs.LinuxResources{
+		CPU: &specs.LinuxCPU{
+			Shares: &oneAgentResource.shares,
+			Quota:  &oneAgentResource.quota,
+			Period: &oneAgentResource.period,
+		},
+		Memory: &specs.LinuxMemory{
+			Limit: &oneAgentResource.memory,
+			Swap:  &oneAgentResource.swap,
+		},
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		defer control.Delete()
+		if err := control.Add(cgroup1.Process{Pid: os.Getpid()}); err != nil {
+			fmt.Println(err.Error())
+		} else {
+			fmt.Println("enable limit resource ")
 		}
 	}
 }

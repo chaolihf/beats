@@ -17,7 +17,7 @@ go get github.com/elastic/beats/v7/libbeat/publisher/queue/diskqueue
 config.json文件格式
 ```
 {
-    "module":["filebeat","node_exporter"],
+    "module":["filebeat","node_exporter","limit"],
     "command":[
         {
             "name":"web.config.file",
@@ -25,7 +25,14 @@ config.json文件格式
             "value":"",
             "description":"[EXPERIMENTAL] Path to configuration file that can enable TLS or authentication. See: https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md"
         }
-    ]
+    ],
+    "limit":{
+        "shares":20,//设置CPU资源的共享权重。这里将共享权重设置为20，表示该控制组在CPU资源竞争时会获得较低的优先级。
+	    "period":1000000,//设置CPU时间周期的长度。这里将周期设置为1秒
+	    "quota":100000,//设置CPU使用时间配额。这里将配额设置为0.1秒
+	    "memory":100000000,//设置内存限制。这里将内存限制设置为100MB。
+	    "swap":1000000000//设置交换空间限制。这里将交换空间限制设置为1GB。
+    },
 }
 ```
 
