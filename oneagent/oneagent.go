@@ -105,7 +105,7 @@ func main() {
 	if oneAgentModules[Module_File] {
 		go runFileBeat(oneAgentModules, done[0], oneAgentCommandLines)
 	}
-	if !oneAgentModules[Module_Node] {
+	if oneAgentModules[Module_Node] {
 		node_exporter_main.Main()
 	} else {
 		for _, moduleDone := range done {
