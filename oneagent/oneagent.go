@@ -97,20 +97,22 @@ func main() {
 			fmt.Println("程序退出原因:", r)
 		}
 	}()
-	done := make([]chan string, 1)
+	fileDone := make(chan string)
 	oneAgentModules, oneAgentCommandLines, oneAgentResource := activeInfos()
 	if oneAgentModules[Module_LimitResource] {
 		limitResource(oneAgentResource)
 	}
-	if oneAgentModules[Module_File] {
-		go runFileBeat(oneAgentModules, done[0], oneAgentCommandLines)
-	}
-	if oneAgentModules[Module_Node] {
-		node_exporter_main.Main()
+	if !oneAgentModules[Module_File] {
+		go runFileBeat(oneAgentModules, fileDone, oneAgentCommandLines)
+		fileDoneInfo := <-fileDone
+		fmt.Println(fileDoneInfo)
+		if oneAgentModules[Module_Node] {
+			fmt.Println("start node exporter")
+			node_exporter_main.Main()
+		}
 	} else {
-		for _, moduleDone := range done {
-			v := <-moduleDone
-			fmt.Println("run finish ", v)
+		if oneAgentModules[Module_Node] {
+			node_exporter_main.Main()
 		}
 	}
 }
@@ -157,7 +159,7 @@ func addNodeExporterFlag(runFlags *pflag.FlagSet, commandInfos []CommandInfo) {
 				}
 			case "boolean":
 				{
-					flag.Bool(commandInfo.name, "true" == commandInfo.value, commandInfo.description)
+					flag.Bool(commandInfo.name, commandInfo.value == "true", commandInfo.description)
 					break
 				}
 			}
@@ -191,9 +193,8 @@ func runFileBeat(activeModules map[string]bool, doneChain chan<- string, command
 	if activeModules[Module_Node] {
 		addNodeExporterFlag(settings.RunFlags, commandInfos)
 	}
+	doneChain <- "start filebeat"
 	if err := fileBeatCmd.Filebeat(inputs.Init, settings).Execute(); err != nil {
 		doneChain <- " file error " + err.Error()
-	} else {
-		doneChain <- " file done "
 	}
 }
