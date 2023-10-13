@@ -1,7 +1,11 @@
 {
     "shellScript":
         [
-            
+            {
+            "name":"aa",
+            "timeout":10.0,
+            "arguments":["./scripts/Async.sh"]
+            }
         ],
     "process":{
         "enable":true,
