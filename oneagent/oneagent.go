@@ -102,7 +102,7 @@ func main() {
 	if oneAgentModules[Module_LimitResource] {
 		limitResource(oneAgentResource)
 	}
-	if !oneAgentModules[Module_File] {
+	if oneAgentModules[Module_File] {
 		go runFileBeat(oneAgentModules, fileDone, oneAgentCommandLines)
 		fileDoneInfo := <-fileDone
 		fmt.Println(fileDoneInfo)
