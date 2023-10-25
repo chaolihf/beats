@@ -61,3 +61,6 @@ ONEAGENT_USERS    ALL=(ALL:ALL) ONEAGENT_COMMANDS
 曾经做个尝试，但由于两个原因放弃 
 首先是两个模块都会用到metricbeat，从而导致多个变量、参数冲突，需要逐个解决，改动较大
 其次时auditbeat需要root权限，而filebeat,node是建议在普通用户下运行，这样会将整个应用放在root下运行，安全性存在一定的问题
+
+## 3、为什么开启filebeat模块后无法执行shell，出现operation not permitted错误
+是因为filebeat默认启动seccomp模块，可以在配置文件中seccomp.enabled false禁用
