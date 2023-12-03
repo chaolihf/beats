@@ -1,4 +1,4 @@
 /data
 /logs
 /nohup.out
-/oneagent
+/oneagent_*
