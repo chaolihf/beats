@@ -41,8 +41,11 @@ type可以为string,boolean值
 
 # 编译和运行
 cd beats/oneagent
-go build -ldflags '-w -s'  -o oneagent
+GOARCH=amd64 go build -ldflags '-w -s'  -o oneagent_amd64_1.0.1
+GOARCH=arm64 go build -ldflags '-w -s'  -o oneagent_arm64_1.0.1
 ./oneagent
+或执行
+./build.sh来运行编译命令
 
 需要给此用户以root用户运行的权限，可以在sudo中执行此应用
 Cmnd_Alias ONEAGENT_COMMANDS = /home/oneops/oneagent
