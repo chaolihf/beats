@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"syscall"
 
-	"github.com/shirou/gopsutil/v3/net"
+	"github.com/chaolihf/gopsutil/net"
 
 	"github.com/elastic/beats/v7/metricbeat/mb"
 	"github.com/elastic/elastic-agent-libs/mapstr"

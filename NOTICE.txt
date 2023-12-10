@@ -22322,12 +22322,12 @@ DEALINGS IN THE SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Dependency : github.com/shirou/gopsutil/v3
+Dependency : github.com/chaolihf/gopsutil
 Version: v3.22.10
 Licence type (autodetected): BSD-3-Clause
 --------------------------------------------------------------------------------
 
-Contents of probable licence file $GOMODCACHE/github.com/shirou/gopsutil/v3@v3.22.10/LICENSE:
+Contents of probable licence file $GOMODCACHE/github.com/chaolihf/gopsutil@v3.22.10/LICENSE:
 
 gopsutil is distributed under BSD license reproduced below.
 

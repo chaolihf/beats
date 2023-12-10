@@ -218,7 +218,6 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.17
 	github.com/pkg/xattr v0.4.9
 	github.com/sergi/go-diff v1.3.1
-	github.com/shirou/gopsutil/v3 v3.23.11
 	go.elastic.co/apm/module/apmelasticsearch/v2 v2.4.4
 	go.elastic.co/apm/module/apmhttp/v2 v2.4.4
 	go.elastic.co/apm/v2 v2.4.4
@@ -264,7 +263,8 @@ require (
 	github.com/beevik/ntp v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
-	github.com/chaolihf/node_exporter v1.6.7 // indirect
+	github.com/chaolihf/gopsutil v0.0.4 // indirect
+	github.com/chaolihf/node_exporter v1.6.8 // indirect
 	github.com/chaolihf/udpgo v0.0.13 // indirect
 	github.com/containerd/cgroups/v3 v3.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
