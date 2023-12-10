@@ -67,3 +67,6 @@ ONEAGENT_USERS    ALL=(ALL:ALL) ONEAGENT_COMMANDS
 
 ## 3、为什么开启filebeat模块后无法执行shell，出现operation not permitted错误
 是因为filebeat默认启动seccomp模块，可以在配置文件中seccomp.enabled false禁用
+
+# 版本说明
+v1.0.2: 升级gopsutil，在大量进程情况下（如一体机）会大幅降低CPU利用率
