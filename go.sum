@@ -440,6 +440,10 @@ github.com/chaolihf/node_exporter v1.6.7 h1:PxYQSnqs7MYkXnjGBoFTrxJHTvq0A5ahDLba
 github.com/chaolihf/node_exporter v1.6.7/go.mod h1:+TgYtvJfFe8JgKcc2hC9isEklmn8RW/Lw2/JakAhpeY=
 github.com/chaolihf/node_exporter v1.6.8 h1:FYSBG5I94b5tSGVUG3i/2csoCjFZcioycne5IyQIPh8=
 github.com/chaolihf/node_exporter v1.6.8/go.mod h1:yweiWAc5RdD0izy8dZrIRJOnGPUrkv6KEL5Z0iUZGKo=
+github.com/chaolihf/node_exporter v1.6.9 h1:8yZmXcrpTRgaz87gqsuehgYs06R5pUYCTIhf2B1s+gY=
+github.com/chaolihf/node_exporter v1.6.9/go.mod h1:yweiWAc5RdD0izy8dZrIRJOnGPUrkv6KEL5Z0iUZGKo=
+github.com/chaolihf/node_exporter v1.6.10 h1:dh94pSN49rInewxXmb/oz81RTYWCPr6Cnf8UhN9QJHM=
+github.com/chaolihf/node_exporter v1.6.10/go.mod h1:yweiWAc5RdD0izy8dZrIRJOnGPUrkv6KEL5Z0iUZGKo=
 github.com/chaolihf/udpgo v0.0.13 h1:PffwmW49o/WxbYD4j1T3cw7niCmMm2GzRW1gLdIWJsU=
 github.com/chaolihf/udpgo v0.0.13/go.mod h1:+MgC8ewxYznU81AmQqGz7Xp5X1M27AJEN4WKjBM9kkw=
 github.com/checkpoint-restore/go-criu/v4 v4.1.0/go.mod h1:xUQBLp4RLc5zJtWY++yjOoMoB5lihDt7fai+75m+rGw=
