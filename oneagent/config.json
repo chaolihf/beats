@@ -1,4 +1,5 @@
 {
+    "readTimeout":5,
     "shellScript":
         [
             {
@@ -8,14 +9,15 @@
             }
         ],
     "process":{
-        "enable":true,
+        "enable":1,
         "interval": 86400,
         "cpuOffset": 30,
         "memoryOffset": 200000000,
         "ioSpeedPerSecond": 5000000,
         "openFileOffset": 100,
         "threadOffset": 30,
-        "localLog":true
+        "localLog":true,
+        "designedType":false
     },
     "network":{
         "enable":true,
