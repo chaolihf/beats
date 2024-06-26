@@ -431,6 +431,8 @@ github.com/chaolihf/gopsutil v0.0.4 h1:QBMr1cX/joudsmp+lDAHCUGFjweMwNRgfhZ5ksWGo
 github.com/chaolihf/gopsutil v0.0.4/go.mod h1:K+quN882FmO3Vb04D3GtEnA7zTa533NzndJebJWSQIs=
 github.com/chaolihf/node_exporter v1.8.3 h1:iorpL7cLRDtAmM6kbSTTmao3UPDtiCWf6q6X3zmxbRo=
 github.com/chaolihf/node_exporter v1.8.3/go.mod h1:nc4sS1QXILCpIW0hql4/wN9C4ObGKzcNbVKtTlkHUPI=
+github.com/chaolihf/node_exporter v1.8.4 h1:ttvhGBH1EYtpMtrxoWrNfCl6mhrRcICtJziMbeFDcI0=
+github.com/chaolihf/node_exporter v1.8.4/go.mod h1:nc4sS1QXILCpIW0hql4/wN9C4ObGKzcNbVKtTlkHUPI=
 github.com/chaolihf/udpgo v0.0.13 h1:PffwmW49o/WxbYD4j1T3cw7niCmMm2GzRW1gLdIWJsU=
 github.com/chaolihf/udpgo v0.0.13/go.mod h1:+MgC8ewxYznU81AmQqGz7Xp5X1M27AJEN4WKjBM9kkw=
 github.com/checkpoint-restore/go-criu/v4 v4.1.0/go.mod h1:xUQBLp4RLc5zJtWY++yjOoMoB5lihDt7fai+75m+rGw=
