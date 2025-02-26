@@ -7,12 +7,16 @@ import (
 
 	node_exporter_main "github.com/chaolihf/node_exporter"
 	jjson "github.com/chaolihf/udpgo/json"
+	"github.com/chaolihf/udpgo/lang"
 	"github.com/containerd/cgroups/v3/cgroup1"
 	fileBeatCmd "github.com/elastic/beats/v7/filebeat/cmd"
 	inputs "github.com/elastic/beats/v7/filebeat/input/default-inputs"
 	"github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/spf13/pflag"
+	"go.uber.org/zap"
 )
+
+var fileLogger *zap.Logger
 
 const (
 	Module_File          = "filebeat"
@@ -89,12 +93,24 @@ func activeInfos() (map[string]bool, []CommandInfo, LimitResourceInfo) {
 }
 
 /*
+初始化日志设置，包括日志文件路径、日志级别、日志保留天数、日志文件大小限制等信息
+*/
+func init() {
+	fileLogger = lang.InitProductLogger("logs/oneagent.log", 300, 3, 10)
+}
+
+/*
 开始应用
 */
 func main() {
 	defer func() {
+		fileLogger.Sync()
 		if r := recover(); r != nil {
+			fileLogger.Info(fmt.Sprintf("程序退出原因:", r))
 			fmt.Println("程序退出原因:", r)
+		} else {
+			fileLogger.Info("程序正常退出")
+			fmt.Println("程序正常退出")
 		}
 	}()
 	fileDone := make(chan string)
@@ -108,11 +124,13 @@ func main() {
 		fmt.Println(fileDoneInfo)
 		if oneAgentModules[Module_Node] {
 			fmt.Println("start node exporter")
-			node_exporter_main.Main()
+			fileLogger.Info("启动node exporter")
+			node_exporter_main.Main(fileLogger)
 		}
 	} else {
 		if oneAgentModules[Module_Node] {
-			node_exporter_main.Main()
+			node_exporter_main.Main(fileLogger)
+			fileLogger.Info("启动node exporter")
 		}
 	}
 }
@@ -136,7 +154,7 @@ func limitResource(oneAgentResource LimitResourceInfo) {
 		fmt.Println(err.Error())
 	} else {
 		defer control.Delete()
-		if err := control.Add(cgroup1.Process{Pid: os.Getpid()}); err != nil {
+		if err := control.Add(cgroup1.Process{Pid: os.Getpid()}, cgroup1.Cpu, cgroup1.Memory); err != nil {
 			fmt.Println(err.Error())
 		} else {
 			fmt.Println("enable limit resource ")
@@ -189,6 +207,16 @@ func addNodeExporterFlag(runFlags *pflag.FlagSet, commandInfos []CommandInfo) {
 运行FileBeat
 */
 func runFileBeat(activeModules map[string]bool, doneChain chan<- string, commandInfos []CommandInfo) {
+	defer func() {
+		fileLogger.Sync()
+		if r := recover(); r != nil {
+			fileLogger.Info(fmt.Sprintf("filebeat退出原因:", r))
+			fmt.Println("filebeat退出原因:", r)
+		} else {
+			fileLogger.Info("filebeat正常退出")
+			fmt.Println("filebeat正常退出")
+		}
+	}()
 	settings := fileBeatCmd.FilebeatSettings()
 	if activeModules[Module_Node] {
 		addNodeExporterFlag(settings.RunFlags, commandInfos)

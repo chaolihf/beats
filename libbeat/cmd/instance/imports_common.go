@@ -41,6 +41,7 @@ import (
 	_ "github.com/elastic/beats/v7/libbeat/processors/move_fields"
 	_ "github.com/elastic/beats/v7/libbeat/processors/ratelimit"
 	_ "github.com/elastic/beats/v7/libbeat/processors/registered_domain"
+	_ "github.com/elastic/beats/v7/libbeat/processors/regular_expression"
 	_ "github.com/elastic/beats/v7/libbeat/processors/script"
 	_ "github.com/elastic/beats/v7/libbeat/processors/syslog"
 	_ "github.com/elastic/beats/v7/libbeat/processors/translate_sid"

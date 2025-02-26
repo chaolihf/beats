@@ -1,0 +1,346 @@
+[
+	{
+		"name": "When all the defined fields are captured by we have remaining data",
+		"tok": "level=%{level} ts=%{timestamp} caller=%{caller} msg=\"%{message}\"",
+		"msg": "level=info ts=2018-06-27T17:19:13.036579993Z caller=main.go:222 msg=\"Starting OK\" version=\"(version=2.3.1, branch=HEAD, revision=188ca45bd85ce843071e768d855722a9d9dabe03)\"}",
+		"expected": {
+			"caller": "main.go:222",
+			"level": "info",
+			"message": "Starting OK",
+			"timestamp": "2018-06-27T17:19:13.036579993Z"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "Complex stack trace",
+		"tok": "%{day}-%{month}-%{year} %{hour} %{severity} [%{thread_id}] %{origin} %{message}",
+		"msg": "18-Apr-2018 06:53:20.411 INFO [http-nio-8080-exec-1] org.apache.coyote.http11.Http11Processor.service Error parsing HTTP request header\n Note: further occurrences of HTTP header parsing errors will be logged at DEBUG level.\n java.lang.IllegalArgumentException: Invalid character found in method name. HTTP method names must be tokens\n    at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:426)\n    at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:687)\n    at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)\n    at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:790)\n    at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1459)\n    at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)\n    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)\n    at java.lang.Thread.run(Thread.java:748)",
+		"expected": {
+			"day": "18",
+			"hour": "06:53:20.411",
+			"message": "Error parsing HTTP request header\n Note: further occurrences of HTTP header parsing errors will be logged at DEBUG level.\n java.lang.IllegalArgumentException: Invalid character found in method name. HTTP method names must be tokens\n    at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:426)\n    at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:687)\n    at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)\n    at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:790)\n    at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1459)\n    at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)\n    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)\n    at java.lang.Thread.run(Thread.java:748)",
+			"month": "Apr",
+			"origin": "org.apache.coyote.http11.Http11Processor.service",
+			"severity": "INFO",
+			"thread_id": "http-nio-8080-exec-1",
+			"year": "2018"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "fails when delimiter is not found at the beginning of the string",
+		"tok": "/var/log/%{key}.log",
+		"msg": "foobar",
+		"expected": null,
+		"skip": false,
+		"fail": true
+	},
+	{
+		"name": "fails when delimiter is not found after the key",
+		"tok": "/var/log/%{key}.log",
+		"msg": "/var/log/foobar",
+		"expected": null,
+		"skip": false,
+		"fail": true
+	},
+	{
+		"name": "simple dissect",
+		"tok": "%{key}",
+		"msg": "foobar",
+		"expected": {
+			"key": "foobar"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "dissect two replacement",
+		"tok": "%{key1} %{key2}",
+		"msg": "foo bar",
+		"expected": {
+			"key1": "foo",
+			"key2": "bar"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "one level dissect not end of string",
+		"tok": "/var/%{key}/log",
+		"msg": "/var/foobar/log",
+		"expected": {
+			"key": "foobar"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "one level dissect",
+		"tok": "/var/%{key}",
+		"msg": "/var/foobar/log",
+		"expected": {
+			"key": "foobar/log"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "multiple keys dissect end of string",
+		"tok": "/var/%{key}/log/%{key1}",
+		"msg": "/var/foobar/log/apache",
+		"expected": {
+			"key": "foobar",
+			"key1": "apache"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "multiple keys not end of string",
+		"tok": "/var/%{key}/log/%{key1}.log",
+		"msg": "/var/foobar/log/apache.log",
+		"expected": {
+			"key": "foobar",
+			"key1": "apache"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "simple ordered",
+		"tok": "%{+key/3} %{+key/1} %{+key/2}",
+		"msg": "1 2 3",
+		"expected": {
+			"key": "2 3 1"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "simple append",
+		"tok": "%{key}-%{+key}-%{+key}",
+		"msg": "1-2-3",
+		"expected": {
+			"key": "1-2-3"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "indirect field",
+		"tok": "%{?key} %{\u0026key}",
+		"msg": "hello world",
+		"expected": {
+			"hello": "world"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "skip field",
+		"tok": "%{} %{key}",
+		"msg": "hello world",
+		"expected": {
+			"key": "world"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "named skiped field with indirect",
+		"tok": "%{?key} %{\u0026key}",
+		"msg": "hello world",
+		"expected": {
+			"hello": "world"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "pointer field with indirect",
+		"tok": "%{*key} %{\u0026key}",
+		"msg": "hello world",
+		"expected": {
+			"hello": "world"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "missing fields",
+		"tok": "%{name},%{addr1},%{addr2},%{addr3},%{city},%{zip}",
+		"msg": "Jane Doe,4321 Fifth Avenue,,,New York,87432",
+		"expected": {
+			"addr1": "4321 Fifth Avenue",
+			"addr2": "",
+			"addr3": "",
+			"city": "New York",
+			"name": "Jane Doe",
+			"zip": "87432"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "ignore right padding",
+		"tok": "%{id} %{function-\u003e} %{server}",
+		"msg": "00000043 ViewReceive     machine-321",
+		"expected": {
+			"function": "ViewReceive",
+			"id": "00000043",
+			"server": "machine-321"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "padding on the last key need a delimiter",
+		"tok": "%{id} %{function} %{server-\u003e} ",
+		"msg": "00000043 ViewReceive machine-321    ",
+		"expected": {
+			"function": "ViewReceive",
+			"id": "00000043",
+			"server": "machine-321"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "ignore left padding",
+		"tok": "%{id-\u003e} %{function} %{server}",
+		"msg": "00000043    ViewReceive machine-321",
+		"expected": {
+			"function": "ViewReceive",
+			"id": "00000043",
+			"server": "machine-321"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "when the delimiters contains `{` and `}`",
+		"tok": "{%{a}}{%{b}} %{rest}",
+		"msg": "{c}{d} anything",
+		"expected": {
+			"a": "c",
+			"b": "d",
+			"rest": "anything"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "simple fixed length",
+		"tok": "%{class#1}%{month#2}%{day#2}",
+		"msg": "A0118",
+		"expected": {
+			"class": "A",
+			"month": "01",
+			"day": "18"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "simple ordered and fixed length field",
+		"tok": "%{+key/3#1}%{+key/1#1} %{+key/2}",
+		"msg": "12 3",
+		"expected": {
+			"key": "2 3 1"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "simple padding and fixed length field",
+		"tok": "%{+key/3#1}%{+key/1#1->} %{+key/2}",
+		"msg": "12    3",
+		"expected": {
+			"key": "2 3 1"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "mixed pointer and indirect and fixed length",
+		"tok": "%{*key#5}%{\u0026key#5}",
+		"msg": "helloworld",
+		"expected": {
+			"hello": "world"
+		},
+		"skip": false,
+		"fail": false
+	},
+	{
+		"name": "fails when there is remaining string after the fixed-length key",
+		"tok": "%{class#1}%{month#2}%{day#2}",
+		"msg": "A0118 ",
+		"expected": null,
+		"skip": false,
+		"fail": true
+	},
+	{
+		"name": "fails when there is no enough string for the fixed-length key",
+		"tok": "%{key#10}",
+		"msg": "foobar",
+		"expected": null,
+		"skip": false,
+		"fail": true
+	},
+    {
+        "name": "process",
+        "tok": "%{date} %{time} %{level} [%{thread_id}] %{origin} {\"%{?key}\":\"%{&key}\",\"%{?key1}\":\"%{&key1}\",\"%{?key2}\":\"%{&key2}\"}",
+        "msg": "2023-12-28 09:22:30.854 DEBUG [DefaultQuartzScheduler_Worker-1] c.c.u.c.h.DefaultHttpClient {\"Message\":\"Post url:https:\\/\\/openeop.dcoos.189.cn:8000\\/serviceAgent\\/rest\\/public\\/weblogin\\/getAccessToken\\/0,content:{\\\"password\\\":\\\"Zdxlz2022@\\\",\\\"account\\\":\\\"liangziAlert\\\"}\",\"User\":\"root\",\"Name\":\"cmdb\"}",
+        "expected": {
+            "Message": "Post url:https:\\/\\/openeop.dcoos.189.cn:8000\\/serviceAgent\\/rest\\/public\\/weblogin\\/getAccessToken\\/0,content:{\\\"password\\\":\\\"Zdxlz2022@\\\",\\\"account\\\":\\\"liangziAlert\\\"}",
+            "Name": "cmdb",
+            "User": "root",
+            "date": "2023-12-28",
+            "level": "DEBUG",
+            "origin": "c.c.u.c.h.DefaultHttpClient",
+            "thread_id": "DefaultQuartzScheduler_Worker-1",
+            "time": "09:22:30.854"
+        },
+        "skip": false,
+        "fail": false
+    },
+    {
+        "name": "process",
+        "tok": "%{date} %{time} %{level} [%{thread_id}] %{origin} {\"%{?key}\":\"%{&key}\",\"%{?key1}\":\"%{&key1}\",\"%{?key2}\":\"%{&key2}\"}",
+        "msg": "2023-12-28 09:22:30.856 ERROR [DefaultQuartzScheduler_Worker-1] c.a.e.EopClient {\"Message\":\"openeop.dcoos.189.cn: 未知的名称或服务\",\"Exception\":\"java.net.UnknownHostException\",\"Throwable\":\"java.net.UnknownHostException:openeop.dcoos.189.cn: 未知的名称或服务\\n\\tat java.base\\/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)\\n\\tat java.base\\/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(InetAddress.java:933)\\n\\tat java.base\\/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1529)\\n\\tat java.base\\/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:852)\\n\\tat java.base\\/java.net.InetAddress.getAllByName0(InetAddress.java:1519)\\n\\tat java.base\\/java.net.InetAddress.getAllByName(InetAddress.java:1377)\\n\\tat java.base\\/java.net.InetAddress.getAllByName(InetAddress.java:1305)\\n\\tat org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)\\n\\tat org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:118)\\n\\tat org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:396)\\n\\tat org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:158)\\n\\tat org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:168)\\n\\tat org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:136)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:175)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:133)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)\\n\\tat org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:75)\\n\\tat com.chinatelecom.udp.core.http.DefaultHttpClient.executeTextRequest(DefaultHttpClient.java:221)\\n\\tat com.chinatelecom.udp.core.http.DefaultHttpClient.executeTextRequest(DefaultHttpClient.java:342)\\n\\tat com.ahchinatelecom.eopservice.EopClient.send(EopClient.java:141)\\n\\tat com.ahchinatelecom.eopservice.EopClient.send(EopClient.java:107)\\n\\tat com.ahchinatelecom.eopservice.EopClient.send(EopClient.java:149)\\n\\tat com.chinatelecom.tool.util.PushPlugins.sendShortMsg(PushPlugins.java:64)\\n\\tat com.chinatelecom.tool.util.MessageMethodUtils.sendMessage(MessageMethodUtils.java:86)\\n\\tat com.chinatelecom.tool.job.ProcessExistsJob.execute(ProcessExistsJob.java:63)\\n\\tat org.quartz.core.JobRunShell.run(JobRunShell.java:202)\\n\\tat org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\\n\",\"User\":\"root\",\"Name\":\"cmdb\"}\n",
+        "expected": {
+            "Exception": "java.net.UnknownHostException",
+            "Message": "openeop.dcoos.189.cn: 未知的名称或服务",
+            "Throwable": "java.net.UnknownHostException:openeop.dcoos.189.cn: 未知的名称或服务\\n\\tat java.base\\/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)\\n\\tat java.base\\/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(InetAddress.java:933)\\n\\tat java.base\\/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1529)\\n\\tat java.base\\/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:852)\\n\\tat java.base\\/java.net.InetAddress.getAllByName0(InetAddress.java:1519)\\n\\tat java.base\\/java.net.InetAddress.getAllByName(InetAddress.java:1377)\\n\\tat java.base\\/java.net.InetAddress.getAllByName(InetAddress.java:1305)\\n\\tat org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)\\n\\tat org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:118)\\n\\tat org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:396)\\n\\tat org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:158)\\n\\tat org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:168)\\n\\tat org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:136)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:175)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:133)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement$1.proceed(ExecChainElement.java:57)\\n\\tat org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)\\n\\tat org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)\\n\\tat org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)\\n\\tat org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:75)\\n\\tat com.chinatelecom.udp.core.http.DefaultHttpClient.executeTextRequest(DefaultHttpClient.java:221)\\n\\tat com.chinatelecom.udp.core.http.DefaultHttpClient.executeTextRequest(DefaultHttpClient.java:342)\\n\\tat com.ahchinatelecom.eopservice.EopClient.send(EopClient.java:141)\\n\\tat com.ahchinatelecom.eopservice.EopClient.send(EopClient.java:107)\\n\\tat com.ahchinatelecom.eopservice.EopClient.send(EopClient.java:149)\\n\\tat com.chinatelecom.tool.util.PushPlugins.sendShortMsg(PushPlugins.java:64)\\n\\tat com.chinatelecom.tool.util.MessageMethodUtils.sendMessage(MessageMethodUtils.java:86)\\n\\tat com.chinatelecom.tool.job.ProcessExistsJob.execute(ProcessExistsJob.java:63)\\n\\tat org.quartz.core.JobRunShell.run(JobRunShell.java:202)\\n\\tat org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\\n\",\"User\":\"root\",\"Name\":\"cmdb",
+            "date": "2023-12-28",
+            "level": "ERROR",
+            "origin": "c.a.e.EopClient",
+            "thread_id": "DefaultQuartzScheduler_Worker-1",
+            "time": "09:22:30.856"
+        },
+        "skip": false,
+        "fail": false
+    },
+    {
+        "name": "mysql-slow test",
+        "tok": "# Time: %{time}# User@Host: %{user}[%{user}] @  [%{host}]  Id: %{id}# Query_time: %{query_time}  Lock_time: %{lock_time} Rows_sent: %{rows_sent}  Rows_examined: %{rows_examined} %{database};SET timestamp=%{timestamp};%{sql};",
+        "msg": "# Time: 2023-10-31T01:03:35.806047+08:00# User@Host: imsdk[imsdk] @  [172.16.7.11]  Id: 4186673# Query_time: 1.012129  Lock_time: 0.000066 Rows_sent: 0  Rows_examined: 1use eqc_imsdk_v2.0;SET timestamp=1698685414;update cms_user_score        set        update_time=now(),                     score = score + 5                          where user_id = '3f75137211f24e27814934e6fdc6637f';",
+        "expected": {
+            "database": "eqc_imsdk_v2.0",
+            "host": "172.16.7.11",
+            "id": "4186673",
+            "lock_time": "0.000066",
+            "query_time": "1.012129",
+            "rows_examined": "1",
+            "rows_sent": "0",
+            "sql": "update cms_user_score        set        update_time\u003dnow(),                     score \u003d score + 5                          where user_id \u003d \u00273f75137211f24e27814934e6fdc6637f\u0027",
+            "time": "2023-10-31T01:03:35.806047+08:00",
+            "timestamp": "1698685414",
+            "user": "imsdk"
+        },
+        "skip": false,
+        "fail": false
+    }
+]

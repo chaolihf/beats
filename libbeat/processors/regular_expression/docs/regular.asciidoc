@@ -1,0 +1,36 @@
+[[dissect]]
+=== Dissect strings
+
+++++
+<titleabbrev>dissect</titleabbrev>
+++++
+
+The `dissect` processor tokenizes incoming strings using defined patterns.
+
+[source,yaml]
+-------
+processors:
+  - regular:
+      regexp: ""
+      field: "message"
+      target_prefix: "regular"
+-------
+
+The `regular` processor has the following configuration settings:
+
+`regexp`:: The field used to define the *dissection* pattern.
+              Optional convert datatype can be provided after the key using `|` as separator
+              to convert the value from string to integer, long, float, double, boolean or ip.
+
+`field`:: (Optional) The event field to tokenize. Default is `message`.
+
+`target_prefix`:: (Optional) The name of the field where the values will be extracted. When an empty
+string is defined, the processor will create the keys at the root of the event. Default is
+`dissect`. When the target key already exists in the event, the processor won't replace it and log
+an error; you need to either drop or rename the key before using dissect, or
+enable the `overwrite_keys` flag.
+
+`ignore_failure`:: (Optional) Flag to control whether the processor returns an error if the
+tokenizer fails to match the message field. If set to true, the processor will silently restore
+the original event, allowing execution of subsequent processors (if any). If set to false
+(default), the processor will log an error, preventing execution of other processors.
