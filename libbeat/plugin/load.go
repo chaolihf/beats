@@ -21,11 +21,12 @@ package plugin
 
 import (
 	"errors"
-	goplugin "plugin"
+	"fmt"
 )
 
 func loadPlugins(path string) error {
-	p, err := goplugin.Open(path)
+	fmt.Printf("load plugins %s\n", path)
+	p, err := Open(path)
 	if err != nil {
 		return err
 	}
