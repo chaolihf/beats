@@ -39,6 +39,10 @@ import (
 	"unsafe"
 )
 
+// func open(name string) (*Plugin, error) {
+// 	return nil, nil
+// }
+
 func open(name string) (*Plugin, error) {
 	cPath := make([]byte, C.PATH_MAX+1)
 	cRelName := make([]byte, len(name)+1)
@@ -139,8 +143,13 @@ var (
 	sysPlugins map[string]*Plugin
 )
 
+// // lastmoduleinit is defined in package runtime.
+// func lastmoduleinit() (pluginpath string, syms map[string]any, inittasks []*initTask, errstr string)
+
 // lastmoduleinit is defined in package runtime.
-func lastmoduleinit() (pluginpath string, syms map[string]any, inittasks []*initTask, errstr string)
+func lastmoduleinit() (pluginpath string, syms map[string]any, inittasks []*initTask, errstr string) {
+	return "", nil, nil, ""
+}
 
 // doInit is defined in package runtime.
 //

@@ -18,6 +18,8 @@ import (
 
 var fileLogger *zap.Logger
 
+var version = ""
+
 const (
 	Module_File          = "filebeat"
 	Module_Node          = "node_exporter"
@@ -103,6 +105,14 @@ func init() {
 开始应用
 */
 func main() {
+	var isVersion bool
+	flag.BoolVar(&isVersion, "version", false, "version")
+	flag.Parse()
+	if isVersion {
+		fmt.Printf("version: %s\n",
+			version)
+		return
+	}
 	defer func() {
 		fileLogger.Sync()
 		if r := recover(); r != nil {

@@ -1,37 +1,46 @@
-{
-    "readTimeout":5,
-    "shellScript":
-        [
-            {
-            "name":"aa",
-            "timeout":10.0,
-            "arguments":["./scripts/1MinLoad.sh"]
-            }
-        ],
+{   
     "process":{
-        "enable":1,
-        "interval": 86400,
+        "enable":0,
+        "interval": 1,
         "cpuOffset": 30,
         "memoryOffset": 200000000,
         "ioSpeedPerSecond": 5000000,
         "openFileOffset": 100,
         "threadOffset": 30,
         "localLog":true,
-        "designedType":false
+        "designedType":true
     },
+    "fileCheck":{
+            "enable":false,
+            "filePath":[
+                {"path":"/ias/optias/ias_route/",
+                     "id":"5b105ea7-9c1f-dfd1-a5fc-123345555",
+          "encoding":"ISO-8859-1"}
+            ]
+        },
+    "designedProcess":[       
+        {
+           "command":["java"],
+           "process_object_id":["123"]
+        }
+    ],
     "network":{
         "enable":true,
         "interval": 86400,
         "counterOffset":100,
         "localLog":true
     },
-    "module":["filebeat","node_exporter","limit"],
+    "module":["node_exporter","limit"],
     "limit":{
-        "shares":20,
-	    "period":1000000,
-	    "quota":200000,
-	    "memory":100000000,
-	    "swap":1000000000
+            "shares":20,
+            "period":1000000,
+            "quota":200000,
+            "memory":100000000,
+            "swap":1000000000
+    },
+    "gpuCollect":{
+	    "enable":false,
+	    "gpuType":"nvidia"
     },
     "command":[
         {
@@ -55,12 +64,6 @@
         {
             "name":"collector.systemd",
             "type":"boolean",
-            "value":"",
-            "description":""
-        },
-        {
-            "name":"collector.systemd.unit-include",
-            "type":"string",
             "value":"",
             "description":""
         }
