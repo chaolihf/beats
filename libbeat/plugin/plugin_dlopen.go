@@ -62,13 +62,9 @@ var (
 // func lastmoduleinit() (pluginpath string, syms map[string]any, inittasks []*initTask, errstr string)
 
 // lastmoduleinit is defined in package runtime.
-<<<<<<< HEAD
 func lastmoduleinit() (pluginpath string, syms map[string]any, inittasks []*initTask, errstr string) {
 	return "", nil, nil, ""
 }
-=======
-//func lastmoduleinit() (pluginpath string, syms map[string]any, inittasks []*initTask, errstr string)
->>>>>>> 936cc6b8fb8001f6c7cefd7fc906fb618ab39656
 
 // doInit is defined in package runtime.
 //

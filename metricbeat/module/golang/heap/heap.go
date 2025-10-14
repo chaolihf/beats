@@ -44,11 +44,11 @@ var (
 
 // init registers the MetricSet with the central registry.
 // The New method will be called after the setup of the module and before starting to fetch data
-func init() {
-	mb.Registry.MustAddMetricSet("golang", "heap", New,
-		mb.WithHostParser(hostParser),
-	)
-}
+// func init() {
+// 	mb.Registry.MustAddMetricSet("golang", "heap", New,
+// 		mb.WithHostParser(hostParser),
+// 	)
+// }
 
 // MetricSet type defines all fields of the MetricSet
 // As a minimum it must inherit the mb.BaseMetricSet fields, but can be extended with

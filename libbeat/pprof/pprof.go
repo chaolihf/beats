@@ -40,7 +40,7 @@ type Config struct {
 // IsEnabled returns true if the pprof config is non-nil and either 'enabled'
 // is not set or it is set to true.
 func (c *Config) IsEnabled() bool {
-	return c != nil && (c.Enabled == nil || *c.Enabled)
+	return c != nil && (c.Enabled != nil && *c.Enabled)
 }
 
 // SetRuntimeProfilingParameters pushes the configuration parameters into the Go runtime.

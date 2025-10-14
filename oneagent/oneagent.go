@@ -105,14 +105,7 @@ func init() {
 开始应用
 */
 func main() {
-	var isVersion bool
-	flag.BoolVar(&isVersion, "version", false, "version")
-	flag.Parse()
-	if isVersion {
-		fmt.Printf("version: %s\n",
-			version)
-		return
-	}
+	fileLogger.Info(fmt.Sprintf("oneagent version: %s\n", version))
 	defer func() {
 		fileLogger.Sync()
 		if r := recover(); r != nil {

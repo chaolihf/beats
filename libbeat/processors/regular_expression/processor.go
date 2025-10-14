@@ -3,6 +3,7 @@ package regular_expression
 import (
 	"errors"
 	"fmt"
+
 	"github.com/elastic/beats/v7/libbeat/beat"
 	"github.com/elastic/beats/v7/libbeat/processors"
 	jsprocessor "github.com/elastic/beats/v7/libbeat/processors/script/javascript/module/processor"
@@ -86,7 +87,7 @@ func (p *processor) mapper(event *beat.Event, m []string) (*beat.Event, error) {
 		if k == 0 {
 			continue
 		}
-		key := fmt.Sprintf("${%d}", k)
+		key := fmt.Sprintf("$(%d)", k)
 		prefixKey := prefix + key
 		if _, err := event.GetValue(prefixKey); errors.Is(err, mapstr.ErrKeyNotFound) {
 			_, _ = event.PutValue(prefixKey, v)
