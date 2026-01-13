@@ -1,0 +1,10 @@
+
+[source,yaml]
+-------
+processors:
+  - splitting:
+      field: "message"
+      target_prefix: "messageChunks"
+      max_byte_size: 111
+      retain_original_field: true
+

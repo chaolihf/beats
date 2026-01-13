@@ -200,7 +200,7 @@ require (
 	github.com/aws/smithy-go v1.19.0
 	github.com/awslabs/kinesis-aggregation/go/v2 v2.0.0-20220623125934-28468a6701b5
 	github.com/chaolihf/gopsutil v0.0.4
-	github.com/chaolihf/node_exporter v1.9.3-ceta4
+	github.com/chaolihf/node_exporter v1.9.4-beta1
 	github.com/chaolihf/udpgo v0.0.14
 	github.com/containerd/cgroups/v3 v3.0.2
 	github.com/elastic/bayeux v1.0.5
@@ -253,7 +253,7 @@ require (
 	github.com/NVIDIA/go-nvml v0.12.4-1 // indirect
 	github.com/alecthomas/kingpin/v2 v2.3.2 // indirect
 	github.com/alecthomas/units v0.0.0-20240626203959-61d1e3462e30 // indirect
-	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230305170008-8188dc5388df // indirect
 	github.com/apache/thrift v0.18.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect

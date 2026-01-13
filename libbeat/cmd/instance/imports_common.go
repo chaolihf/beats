@@ -31,6 +31,7 @@ import (
 	_ "github.com/elastic/beats/v7/libbeat/processors/add_process_metadata"
 	_ "github.com/elastic/beats/v7/libbeat/processors/communityid"
 	_ "github.com/elastic/beats/v7/libbeat/processors/convert"
+	_ "github.com/elastic/beats/v7/libbeat/processors/data_splitting"
 	_ "github.com/elastic/beats/v7/libbeat/processors/decode_duration"
 	_ "github.com/elastic/beats/v7/libbeat/processors/decode_xml"
 	_ "github.com/elastic/beats/v7/libbeat/processors/decode_xml_wineventlog"
